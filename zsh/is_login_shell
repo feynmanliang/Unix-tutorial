@@ -1,0 +1,8 @@
+#!/usr/bin/zsh
+
+if [[ -o login ]]; then;
+  print yes;
+else;
+  print no;
+fi;
+
