@@ -1,0 +1,33 @@
+#!/usr/bin/zsh
+
+p="this is a parameter"
+print "this is an expansion of p=$p"
+
+foo=(This is "an array")
+print -- $foo # we use -- to denote end of the arguments to print, so the string can start with -
+print -- -
+print -- ${foo[3]}
+
+foo='*'
+print -- "zsh will happy print a glob $foo"
+
+print -- "\$0 is special, it's the name of the script: $0"
+print -- "\$1 and higher are the arguments: $1 $2 $3..."
+
+# Traps are a way of stopping signals sent to the shell, like ^C or ^Z
+# trap 'print I caught a SIGINT' INT # prints message whenever ^C signal
+
+
+# We have 'bang-history' (works only in the editor, start interactive shell session to try)
+#print /usr/bin/cat
+#print `!!` # previous history
+#print `!!:t` # tail modifier
+#print `!!:h` # head modifier
+
+if [[ -r ~/.aliasrc ]]; then # readable aliasrc file?
+  source ~/.aliasrc # runs it if so
+fi
+
+# environment variables exist outside the shell and must be exported
+export VARNAME='value'
+export VARNAME=''
