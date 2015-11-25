@@ -1,0 +1,27 @@
+#!/usr/bin/zsh
+
+setopt extended_glob
+
+# recursive globbing
+mkdir -p glob_demo/foo
+mkdir -p glob_demo/bar/foo
+mkdir -p glob_demo/baz
+mkdir -p glob_demo/caz
+
+# match any file foo within current directory and subdirectories
+print $(ls **/foo)
+
+# negation
+# any file starting with f or b
+print $(ls glob_demo/[fb]*)
+
+# any file not starting with 'f' or 'b'
+print $(ls glob_demo/[^bc]*) # WHY DOESN'T THIS WORK?
+
+# any file except baz and caz
+print $(ls glob_demo/^(baz|caz))
+
+# any file not starting with ba
+print $(ls glob_demo/^ba*)
+
+rm -rf glob_demo
