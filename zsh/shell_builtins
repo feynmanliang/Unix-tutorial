@@ -1,0 +1,47 @@
+#!/usr/bin/zsh
+
+# termcap -- obselete
+zmodload -i zsh/termcap # load module without complaining if already loading
+echotc md
+echo -n bold
+echotc mr
+echo -n reverse
+echotc me
+echo
+
+# using ZSH
+print -P '%Bbold%Sreverse%b%s'
+
+# better tests
+# [[ ]] is special syntax in case either var expands to nothing
+if [[ $var1 = $var2 ]]; then
+  print doing something
+fi
+
+# ':' is synonym for true, often used to ignore arguments
+print $param
+print ${: ${param:=value}}
+print $param
+# binds $param to value if it was empty before and left alone otherwise
+# result is passed as argument to ':', which ignores it
+
+
+# (parentheses around command) asks shell to start different process for it
+# Useful when you don't want effects propagating back
+mkdir test
+(cd test; mkdir test2)
+if [[ -d test ]]; then
+  echo 'test directory present'
+else
+  echo 'test directory not present'
+fi
+(cd test; rmdir test2; cd ..; rmdir test) # note that this shell's cwd didn't change
+if [[ -d test ]]; then
+  echo 'test directory present'
+else
+  echo 'test directory not present'
+fi
+
+# in ZSH, all but last portion of pipes are run in different processes
+cd .. | print Hello
+print `pwd`
