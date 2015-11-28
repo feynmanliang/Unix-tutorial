@@ -1,0 +1,33 @@
+#!/usr/bin/zsh
+
+# $cdpath is searched in order to find directory to CD into
+# uses cwd if not set
+if ! [[ -d ./crick ]]; then
+  mkdir ./crick ./crick/dna
+fi
+if ! [[ -d ./watson ]]; then
+  mkdir ./watson ./watson/dna
+fi
+cdpath=(`pwd`/crick .)
+cd ./watson
+cd dna
+pwd # we are in ./crick/dna because it appears first on $cdpath
+cd ../..
+rm -rf ./crick ./watson
+
+# directory stack of recently visited directories
+mkdir -p ./a/b
+mkdir -p ./a/c
+cd ./a
+pwd
+pushd ./b
+pwd
+pushd ../c
+pwd
+dirs -v
+popd
+pwd
+popd
+pwd
+cd ../
+rm -rf ./a
