@@ -1,0 +1,67 @@
+#!/usr/bin/zsh
+
+# `typeset` creates variables with "local scope"
+var='Original value'
+subfn() {
+  print $var
+}
+fn() {
+  print $var
+  # without `typeset`, this assignment would cause `var` to be overridden
+  typeset var='Value in function'
+  print $var
+  subfn
+}
+fn
+print $var
+
+# cannot typset arrays since syntax with parenthesis is special and only works
+# when line consists entirely of assignments, but can assign array to scalar and shell will convert
+# so to scope an array
+arrayFun() {
+  typeset var
+  var=(array value)
+  print $var
+}
+arrayFun
+print $var
+
+# can also typeset gloabl with -g
+fn() {
+  typeset -Fg f
+  (( f = 42.75 ))
+}
+fn
+print $f
+
+# associative arrays
+typeset -A assoc
+assoc=(one eins two zwei three drei)
+print ${assoc[two]}
+unset 'assoc[two]'
+print $assoc
+print ${(k)assoc}
+print ${(kv)assoc}
+
+
+# using `typeset` to set attributes for parameters, this example demos for
+# the readonly `-r` option's local scoping
+msg='This is an ordinary parameter'
+fn() {
+  typeset msg='This is a local ordinary parameter'
+  print $msg
+  typeset -r msg='This is a local readonly parameter'
+  print $msg
+  #msg='Watch me cause an error.'
+}
+fn
+print $msg
+msg='This version of the parameter'\
+' can still be overwritten'
+print $msg
+
+# print all read only params
+typeset -r
+
+# special syntax for expansion
+print ${(t)PATH}
