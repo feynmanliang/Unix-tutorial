@@ -4,7 +4,21 @@ print "Read into a param"
 read param
 print $param
 
-# can us -A to read into an array
+# shorthand for prompting and reading
+read param'?Please enter a param: '
+print $param
+
+# can us -A to read into an array, by default splits on whitespace
 print "Read into an array"
 read -A array
 print ${array[1]} ${array[4]}
+
+# can split on anything really, this example splits on ':'
+fn () {
+  local IFS=:
+  read -A array
+  print -l $array
+}
+fn
+
+
