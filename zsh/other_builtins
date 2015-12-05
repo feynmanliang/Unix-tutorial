@@ -1,0 +1,40 @@
+#!/usr/bin/zsh
+
+# `set` sets the special parameter passed as argument to
+# functions or script, accessed by $* or $@, or $<number>
+set a whole load of words
+print $1
+print $2
+print $@
+print $*
+print $argv[2,-2]
+
+# `set` can also set an array
+set -A any_array words to assign to any_array
+print $any_array
+any_array=(words to assign to any_array)
+print $any_array
+
+# this is used if the name of array comes from a parameter
+arrname=myarray
+set -A $arrname words to assign
+# $arrname=(words to assign) # doesnt work
+eval print \$${arrname}
+
+# `shift` moves array up one, deleting original first
+array=(0 1 2 3 4)
+print $array
+shift array # equivalent to array=(${array[2,-1]})
+print $array
+
+# `unset` unsets a parameter, can be used in associative array.
+# Calling `unset` in a function => reuse of the same name will be scoped
+# as the original parameter was
+var='global value'
+fn() {
+  typeset var='local value'
+  unset var # even though `var` is unset here, a shadow copy in local scope still exists
+  var='what about this?' # would mutate global but `var` was `typeset` to local scope
+}
+fn
+print $var # 'global value'
