@@ -1,0 +1,26 @@
+#!/usr/bin/zsh
+
+# traps make the shell handle signals
+
+# trap "echo I\\'m trapped." INT # echos trapped on SIGINT i.e. ^C
+
+# trap '' INT
+
+# alternatively, functions beginning with TRAP are special
+TRAPINT() {
+  print "Signal caught, stopping anyway."
+  return $(( 128 + $1 ))
+  # $1 = first argument to function = number of signal = 2 for SIGINT
+  # $((...)) return 130
+  # function returns with 130, returning non-zero in function trap aborts surrounding command
+}
+
+# can insuldate nested traps using LOCAL_TRAPS
+trap 'echo Hi.' INT
+fn() {
+  setopt localtraps # 'Hi' trap is replaced after function exits
+  trap 'echo Bye.' INT
+}
+
+# to unset a trap, use `trap -`
+trap - INT
