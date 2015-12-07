@@ -1,0 +1,49 @@
+#!/usr/bin/zsh
+
+foo=''
+
+# DONT DO
+if test x$foo != x; then
+  echo The emptiness of foo. Yet are we not all empty\?
+fi
+
+# instead
+if [[ -z $foo ]]; then
+  print Alack and alas, foo still has nothing in it.
+fi
+# because even if $foo expands to empty string [[...]] remembers that there
+# was something there and gets the syntax correct
+
+# can use patterns in tests
+if [[ biryani = b* ]]; then
+  print Word begins with a b.
+fi
+
+number=5
+if [[ $number -gt 3 ]]; then
+  print Wow, that\'s big
+fi
+
+# DONT FORGET: '=' family compares strings and not numbers
+if [[ $number -eq 5 ]]; then
+  print number is equal to 5
+fi
+
+if [[ file1 -nt file2 ]]; then
+  print file1 is newer than file2
+fi
+
+# -z tests for zero length argument, opposite is `-n` tests for non-zero length
+# arguments to these can be any single-word expression
+if [[ -z "$var is sqrt(`print bibble`)" ]]; then
+  print Flying pig detected
+fi
+
+# other tests are '-e' for exists, '-f' if regualr file (i.e. not dir)
+# '-x' executable, '-o <option>' whether option is set, '-t <fd>' whether
+# file descriptor attached to terminal
+#
+# only things left are logical operators || && !
+if [[ 3 -gt 2 && (me > you || ! -z bah ) ]]; then
+  print will I, won\'t I...
+fi

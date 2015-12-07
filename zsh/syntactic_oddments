@@ -1,0 +1,38 @@
+#!/usr/bin/zsh
+
+# . "filename" reads in the file as a stream of commands
+# there is no local parameter scope; everything is in same scope as caller
+[[ -f ~/.aliases ]] && . ~/.aliases
+
+# evaluating a string as a commant using `eval`
+param='print Hello.'
+eval $param
+# note similarity to `trap`s
+trap 'print Hello.' EXIT
+trap - EXIT
+
+# somewhere above...
+origdata='I am data.'
+# but all you know about is
+paramname=origdata
+# so to extract the data you can do...
+eval 'data=${'$paramname'}' # string $ + result of evaluation $paramname
+print $data # $data = "$origdata"
+
+# don't confuse `eval` with `...` or $(...)
+# the latter two insert output of command back to the command line
+
+
+
+# sometimes you don't want shell to wait for command to finish
+# i.e. run a command instead of the shell, then can use `exec
+replaceShellProcessWithChromium() {
+  export MOZILLA_HOME=~/.local/share/webkit/
+  exec chromium "$@"
+}
+
+# one legitimate use is to replace current shell
+# exec zsh
+
+# `exec` is a "precommand modifier". Another one is `noglob
+noglob print * # disables glob expansion of * to match all files in cwd
