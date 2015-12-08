@@ -21,15 +21,16 @@ testopts() {
         ;;
       # matches a question mark
       # (and nothing else, see text)
+      # `?` is how getopts signals an unknown option
       (\?)
         print Bad option, aborting.
         return 1
         ;;
     esac
   done
-  (( OPTIND > 1 )) && shift $(( OPTIND - 1 ))
+  # $OPTIND is set to 1 at start of every function and advanced by `getopts`
+  (( OPTIND > 1 )) && shift $(( OPTIND - 1 )) # `shift` shifts off the consumed arguments
   print Remaining arguments are: $*
 }
 
-echo $(testopts -b foo -a -- args)
-echo $(testopts \? -b foo  -a -- baz)
+echo $(testopts -b foo -a -- args) # `--` is standard way to tell `getopts` that options are finished
