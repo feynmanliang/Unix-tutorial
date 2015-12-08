@@ -3,19 +3,25 @@
 testopts() {
   # $opt will hold the current option
   local opt
+  # `getopts` is a builtin for processing single-letter options
+  # the while loop has `getopts ab: opt` as argument, which means that `getopt`s gets looped
+  # over all the arguments until none are left.
+  # "ab:" means that `a` takes no argument while `b` takes one (signified by `:`)
+  # if a option is found, it is bound to `$opt`
   while getopts ab: opt; do
     # loop continues till options finished
     # see which pattern $opt matches...
-    case $opt in
-      (a)
+    case $opt in # $opt is pattern matched against every `pattern` line until one matches
+                 # and commands are executed until next `;;`
+      (a) # pattern match for boolean flag `-a`
         print Option a set
         ;;
-      (b)
+      (b) # pattern match for named argument `-b foo`
         print Option b set to $OPTARG
         ;;
-        # matches a question mark
-        # (and nothing else, see text)
-        (\?)
+      # matches a question mark
+      # (and nothing else, see text)
+      (\?)
         print Bad option, aborting.
         return 1
         ;;
@@ -26,3 +32,4 @@ testopts() {
 }
 
 echo $(testopts -b foo -a -- args)
+echo $(testopts \? -b foo  -a -- baz)
